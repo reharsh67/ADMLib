@@ -3,3 +3,4 @@ c:\users\reharsh\documents\visual studio 2015\Projects\ADMLib\ADMLib\bin\Debug\A
 c:\users\reharsh\documents\visual studio 2015\Projects\ADMLib\ADMLib\obj\Debug\ADMLib.csprojResolveAssemblyReference.cache
 c:\users\reharsh\documents\visual studio 2015\Projects\ADMLib\ADMLib\obj\Debug\ADMLib.dll
 c:\users\reharsh\documents\visual studio 2015\Projects\ADMLib\ADMLib\obj\Debug\ADMLib.pdb
+c:\users\reharsh\documents\visual studio 2015\Projects\ADMLib\ADMLib\bin\Debug\ADMLib.dll.config

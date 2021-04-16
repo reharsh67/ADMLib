@@ -22,15 +22,5 @@ namespace ADMLib.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:58227/Service.asmx")]
-        public string ADMLib_WEB_Service_Service {
-            get {
-                return ((string)(this["ADMLib_WEB_Service_Service"]));
-            }
-        }
     }
 }
