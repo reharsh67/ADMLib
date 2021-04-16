@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MyTestLib
+namespace ADMLib.Student
 {
     public class EnqueryFields
     {
