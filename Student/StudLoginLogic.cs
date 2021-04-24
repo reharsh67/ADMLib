@@ -11,30 +11,30 @@ namespace ADMLib.Student
     {
 
 
-        public int login(StudLoginFields sf)
+        public string login(StudLoginFields sf)
         {
             object obj;
+            string x = null;
             const string strcon = "Server=localhost\\SQLEXPRESS;Database=onlineadmission;Trusted_Connection=True;";
-            String query = "select * from adm_tbl_stud_login where r_appid=@r_appid AND r_password=@r_password";
+            //String query = "select * from adm_tbl_stud_login where r_appid=@r_appid AND r_password=@r_password";
             SqlConnection con = new SqlConnection(strcon);
-            SqlCommand cmd = new SqlCommand(query, con);
-            cmd.CommandType = CommandType.Text;
-            cmd.Parameters.AddWithValue("@r_password", CreateMD5(sf.Pass));
-            cmd.Parameters.AddWithValue("@r_appid", sf.AppID);
-            cmd.Connection = con;
+            SqlCommand cmd1 = new SqlCommand("StudLogin", con);
+            cmd1.CommandType = CommandType.StoredProcedure;
+            cmd1.Parameters.AddWithValue("@r_password", CreateMD5(sf.Pass));
+            cmd1.Parameters.AddWithValue("@r_appid", sf.AppID);
+            
             try
             {
+                cmd1.Connection = con;
+                cmd1.CommandType = CommandType.StoredProcedure;
+                cmd1.Parameters.Add("@rv", SqlDbType.NVarChar, 250);
+                cmd1.Parameters["@rv"].Direction = ParameterDirection.Output;
+                cmd1.Connection = con;
                 con.Open();
-                obj = cmd.ExecuteScalar();
-                if (Convert.ToInt32(obj) == 0)
-                {
-                    
-                    return 0;
-                }
-                else
-                {
-                    return 1;
-                }
+                cmd1.ExecuteNonQuery();
+                con.Close();
+                x = cmd1.Parameters["@rv"].Value.ToString();
+                
 
             }
             catch (Exception ex)
@@ -44,9 +44,10 @@ namespace ADMLib.Student
             finally
             {
                 con.Close();
-                cmd.Dispose();
+                cmd1.Dispose();
                 
             }
+            return x;
         }
         public static string CreateMD5(string input)
         {

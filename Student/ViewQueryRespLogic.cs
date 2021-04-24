@@ -14,10 +14,10 @@ namespace ADMLib.Student
 
 
             const string strcon = "Server=localhost\\SQLEXPRESS;Database=onlineadmission;Trusted_Connection=True;";
-            String query = "select * from adm_tbl_student_queries where r_appid=@r_appid ";
+            //String query = "select * from adm_tbl_student_queries where r_appid=@r_appid ";
             SqlConnection con = new SqlConnection(strcon);
-            SqlCommand cmd = new SqlCommand(query, con);
-            cmd.CommandType = CommandType.Text;
+            SqlCommand cmd = new SqlCommand("ViewQueryResp", con);
+            cmd.CommandType = CommandType.StoredProcedure;
             DataTable dt = new DataTable { TableName = "MyTable" };
             cmd.Parameters.AddWithValue("@r_appid", ef.AppID);
             cmd.Connection = con;

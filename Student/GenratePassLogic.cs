@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -9,51 +10,45 @@ namespace ADMLib.Student
 {
     public class GenratePassLogic
     {
-        public int Gen_Pass(StudLoginFields sf)
+        public string Gen_Pass(StudLoginFields sf)
         {
-
-            object obj;
+            object m;
+            String f=""; int x=99;
              const string strcon = "Server=localhost\\SQLEXPRESS;Database=onlineadmission;Trusted_Connection=True;";
              SqlConnection con = new SqlConnection(strcon);
-            String query = "select * from adm_tbl_personal_details where r_email=@r_email AND r_appid=@r_appid";
-            SqlCommand cmd = new SqlCommand(query, con);
-            cmd.CommandType = CommandType.Text;
-            cmd.Parameters.AddWithValue("@r_email", sf.Email);
-            cmd.Parameters.AddWithValue("@r_appid", sf.AppID);
-            cmd.Connection = con;
+            //String query = "select * from adm_tbl_personal_details where r_email=@r_email AND r_appid=@r_appid";
             try
             {
+
+                con.Close();
+
+                // String query1 = "insert into  adm_tbl_stud_login  (r_appid,r_password) values (@r_appid,@r_password) ";
+                SqlCommand cmd1 = new SqlCommand("GenratePassword", con);
+                cmd1.CommandType = CommandType.StoredProcedure;
+                cmd1.Parameters.AddWithValue("@r_password", CreateMD5(sf.Pass));
+                cmd1.Parameters.AddWithValue("@r_appid", sf.AppID);
+                cmd1.Parameters.AddWithValue("@r_email", sf.Email);
+                cmd1.Parameters.Add("@rv", SqlDbType.NVarChar, 250);
+                cmd1.Parameters["@rv"].Direction = ParameterDirection.Output;
+                cmd1.Connection = con;
                 con.Open();
-                obj = cmd.ExecuteScalar();
-                if (Convert.ToInt32(obj) == 0)
-                {
-                    con.Close();
-                    return 0;
-                }
-                else
-                {
-                    con.Close();
-                    con.Open();
-                    String query1 = "insert into  adm_tbl_stud_login  (r_appid,r_password) values (@r_appid,@r_password) ";
-                    SqlCommand cmd1 = new SqlCommand(query1, con);
-                    cmd1.CommandType = CommandType.Text;
-                    cmd1.Parameters.AddWithValue("@r_password", CreateMD5(sf.Pass));
-                    cmd1.Parameters.AddWithValue("@r_appid", sf.AppID);
-                    cmd1.Connection = con;
-                    cmd1.ExecuteNonQuery();
-                    con.Close();
-                    return 1;
-                }
+                cmd1.ExecuteNonQuery();
+                con.Close();
+                f = cmd1.Parameters["@rv"].Value.ToString();
+
+               // f = "10";
+
+
             }
             catch (Exception ex)
             {
-                throw ex;
+                f =f+"  "+ ex.Message.ToString();
             }
             finally
             {
                 con.Close();
             }
-            
+            return f;
         }
         public static string CreateMD5(string input)
         {

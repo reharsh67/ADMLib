@@ -13,36 +13,45 @@ namespace ADMLib.Student
         {
             ARFFormFields emf = new ARFFormFields();
             object obj;
-            String query1 = "select * from adm_tbl_personal_details where r_appid=@r_appid";
-            DataTable dt = new DataTable { TableName = "MyTable" };
+          //  String query1 = "select * from adm_tbl_personal_details where r_appid=@r_appid";
+            
             const string strcon = "Server=localhost\\SQLEXPRESS;Database=onlineadmission;Trusted_Connection=True;";
             SqlConnection con = new SqlConnection(strcon);
+            SqlCommand cmd = new SqlCommand("PreFillARF", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            DataTable dt = new DataTable { TableName = "MyTable" };
+            cmd.Parameters.AddWithValue("@r_appid", ef.AppID);
+            cmd.Connection = con;
             try
             {
-                SqlCommand cmd1 = new SqlCommand(query1, con);
-                cmd1.Parameters.AddWithValue("@r_appid", ef.AppID);
-                cmd1.Connection = con;
                 con.Open();
-                SqlDataReader dr = cmd1.ExecuteReader(CommandBehavior.CloseConnection);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 dt.Load(dr);
-                con.Close();
+
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                cmd.Dispose();
 
             }
             return dt;
         }
-        public int ARF_Fill_Logic(ARFFormFields ef)
+        public string ARF_Fill_Logic(ARFFormFields ef)
         {
             ARFFormFields emf = new ARFFormFields();
-            object obj;
-            String query1 = "update  adm_tbl_personal_details set r_dob=@r_dob,r_gender=@r_gender,r_study_year=@r_study_year,r_admission_type=@r_admission_type,r_academic_yr=@r_academic_yr,r_fathername=@r_fathername,r_fathermobile=@r_fathermobile,r_fatheroccupation=@r_fatheroccupation,r_motherfname=@r_mothername,r_mothermobile=@r_mothermobile,r_motheroccupation=@r_motheroccupation,r_income=@r_income,r_cast=@r_cast,r_relegion=@r_religion,r_address_line_1=@r_address_line_1,r_address_line_2=@r_address_line_2,r_address_line_3=@r_address_line_3 where r_appid=@r_appid";
+            object obj;string x = null;
+            //String query1 = "update  adm_tbl_personal_details set r_dob=@r_dob,r_gender=@r_gender,r_study_year=@r_study_year,r_admission_type=@r_admission_type,r_academic_yr=@r_academic_yr,r_fathername=@r_fathername,r_fathermobile=@r_fathermobile,r_fatheroccupation=@r_fatheroccupation,r_motherfname=@r_mothername,r_mothermobile=@r_mothermobile,r_motheroccupation=@r_motheroccupation,r_income=@r_income,r_cast=@r_cast,r_relegion=@r_religion,r_address_line_1=@r_address_line_1,r_address_line_2=@r_address_line_2,r_address_line_3=@r_address_line_3 where r_appid=@r_appid";
             const string strcon = "Server=localhost\\SQLEXPRESS;Database=onlineadmission;Trusted_Connection=True;";
             SqlConnection con = new SqlConnection(strcon);
             try
             {
-                SqlCommand cmd1 = new SqlCommand(query1, con);
+                SqlCommand cmd1 = new SqlCommand("SaveARFData", con);
                 cmd1.Parameters.AddWithValue("@r_appid", ef.AppID);
                 cmd1.Parameters.AddWithValue("@r_dob", ef.DOB);
                 cmd1.Parameters.AddWithValue("@r_gender", ef.Gender);
@@ -62,10 +71,15 @@ namespace ADMLib.Student
                 cmd1.Parameters.AddWithValue("@r_address_line_2", ef.AddLine2);
                 cmd1.Parameters.AddWithValue("@r_address_line_3", ef.AddLine3);
                 cmd1.Connection = con;
+                cmd1.CommandType = CommandType.StoredProcedure;
+                cmd1.Parameters.Add("@rv", SqlDbType.NVarChar, 250);
+                cmd1.Parameters["@rv"].Direction = ParameterDirection.Output;
+                cmd1.Connection = con;
                 con.Open();
                 cmd1.ExecuteNonQuery();
                 con.Close();
-                
+                x = cmd1.Parameters["@rv"].Value.ToString();
+
             }
             catch(Exception ex)
             {
@@ -73,7 +87,7 @@ namespace ADMLib.Student
             }
 
 
-                return 0;
+            return x;
         }
 
     }

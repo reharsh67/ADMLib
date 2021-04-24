@@ -9,41 +9,32 @@ namespace ADMLib.Student
 {
     public class ResetPasswordLogic
     {
-        public int PassReset(StudLoginFields sf)
+        public string PassReset(StudLoginFields sf)
         {
 
-            object obj;
+            object obj; string x = null;
             const string strcon = "Server=localhost\\SQLEXPRESS;Database=onlineadmission;Trusted_Connection=True;";
             SqlConnection con = new SqlConnection(strcon);
-            String query = "select * from adm_tbl_personal_details where  r_appid=@r_appid";
-            SqlCommand cmd = new SqlCommand(query, con);
-            cmd.CommandType = CommandType.Text;
-            
-            cmd.Parameters.AddWithValue("@r_appid", sf.AppID);
-            cmd.Connection = con;
+           
             try
             {
-                con.Open();
-                obj = cmd.ExecuteScalar();
-                if (Convert.ToInt32(obj) == 0)
-                {
-                    con.Close();
-                    return 0;
-                }
-                else
-                {
-                    con.Close();
+               
+                    
                     con.Open();
-                    String query1 = "update  adm_tbl_stud_login set r_password=@r_password where r_appid=@r_appid";
-                    SqlCommand cmd1 = new SqlCommand(query1, con);
-                    cmd1.CommandType = CommandType.Text;
+                    //String query1 = "update  adm_tbl_stud_login set r_password=@r_password where r_appid=@r_appid";
+                    SqlCommand cmd1 = new SqlCommand("ResetStudPass", con);
+                    cmd1.CommandType = CommandType.StoredProcedure;
                     cmd1.Parameters.AddWithValue("@r_password", CreateMD5(sf.Pass));
                     cmd1.Parameters.AddWithValue("@r_appid", sf.AppID);
-                    cmd1.Connection = con;
-                    cmd1.ExecuteNonQuery();
-                    con.Close();
-                    return 1;
-                }
+                cmd1.Parameters.AddWithValue("@r_email", sf.Email);
+                cmd1.Parameters.Add("@rv", SqlDbType.NVarChar, 250);
+                cmd1.Parameters["@rv"].Direction = ParameterDirection.Output;
+                cmd1.Connection = con;
+                con.Open();
+                cmd1.ExecuteNonQuery();
+                con.Close();
+               x = cmd1.Parameters["@rv"].Value.ToString();
+                
             }
             catch (Exception ex)
             {
@@ -53,6 +44,7 @@ namespace ADMLib.Student
             {
                 con.Close();
             }
+            return x;
 
         }
         public static string CreateMD5(string input)
