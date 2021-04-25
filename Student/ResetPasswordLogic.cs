@@ -20,13 +20,13 @@ namespace ADMLib.Student
             {
                
                     
-                    con.Open();
+                    
                     //String query1 = "update  adm_tbl_stud_login set r_password=@r_password where r_appid=@r_appid";
                     SqlCommand cmd1 = new SqlCommand("ResetStudPass", con);
                     cmd1.CommandType = CommandType.StoredProcedure;
                     cmd1.Parameters.AddWithValue("@r_password", CreateMD5(sf.Pass));
                     cmd1.Parameters.AddWithValue("@r_appid", sf.AppID);
-                cmd1.Parameters.AddWithValue("@r_email", sf.Email);
+     
                 cmd1.Parameters.Add("@rv", SqlDbType.NVarChar, 250);
                 cmd1.Parameters["@rv"].Direction = ParameterDirection.Output;
                 cmd1.Connection = con;

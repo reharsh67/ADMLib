@@ -13,8 +13,8 @@ namespace ADMLib.Student
         {
             ARFFormFields emf = new ARFFormFields();
             object obj;
-          //  String query1 = "select * from adm_tbl_personal_details where r_appid=@r_appid";
-            
+            //  String query1 = "select * from adm_tbl_personal_details where r_appid=@r_appid";
+
             const string strcon = "Server=localhost\\SQLEXPRESS;Database=onlineadmission;Trusted_Connection=True;";
             SqlConnection con = new SqlConnection(strcon);
             SqlCommand cmd = new SqlCommand("PreFillARF", con);
@@ -45,7 +45,7 @@ namespace ADMLib.Student
         public string ARF_Fill_Logic(ARFFormFields ef)
         {
             ARFFormFields emf = new ARFFormFields();
-            object obj;string x = null;
+            object obj; string x = null;
             //String query1 = "update  adm_tbl_personal_details set r_dob=@r_dob,r_gender=@r_gender,r_study_year=@r_study_year,r_admission_type=@r_admission_type,r_academic_yr=@r_academic_yr,r_fathername=@r_fathername,r_fathermobile=@r_fathermobile,r_fatheroccupation=@r_fatheroccupation,r_motherfname=@r_mothername,r_mothermobile=@r_mothermobile,r_motheroccupation=@r_motheroccupation,r_income=@r_income,r_cast=@r_cast,r_relegion=@r_religion,r_address_line_1=@r_address_line_1,r_address_line_2=@r_address_line_2,r_address_line_3=@r_address_line_3 where r_appid=@r_appid";
             const string strcon = "Server=localhost\\SQLEXPRESS;Database=onlineadmission;Trusted_Connection=True;";
             SqlConnection con = new SqlConnection(strcon);
@@ -70,6 +70,7 @@ namespace ADMLib.Student
                 cmd1.Parameters.AddWithValue("@r_address_line_1", ef.AddLine1);
                 cmd1.Parameters.AddWithValue("@r_address_line_2", ef.AddLine2);
                 cmd1.Parameters.AddWithValue("@r_address_line_3", ef.AddLine3);
+                cmd1.Parameters.AddWithValue("@r_category", ef.Category);
                 cmd1.Connection = con;
                 cmd1.CommandType = CommandType.StoredProcedure;
                 cmd1.Parameters.Add("@rv", SqlDbType.NVarChar, 250);
@@ -81,7 +82,7 @@ namespace ADMLib.Student
                 x = cmd1.Parameters["@rv"].Value.ToString();
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -89,6 +90,8 @@ namespace ADMLib.Student
 
             return x;
         }
+
+
 
     }
 }

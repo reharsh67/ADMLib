@@ -102,8 +102,76 @@ return x;
             }
             return x+1;
         }
-            
+        public DataSet LoadStates()
+        {
+            //ARFFormFields emf = new ARFFormFields();
+            object obj;
+            //  String query1 = "select * from adm_tbl_personal_details where r_appid=@r_appid";
+
+            const string strcon = "Server=localhost\\SQLEXPRESS;Database=onlineadmission;Trusted_Connection=True;";
+            SqlConnection con = new SqlConnection(strcon);
+            SqlCommand cmd = new SqlCommand("ListStates", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            //DataTable dt = new DataTable { TableName = "MyTable" };
+
+            cmd.Connection = con;
+            DataSet ds = new DataSet();
+            try
+            {
+                con.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(ds);
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                cmd.Dispose();
+
+            }
+            return ds;
         }
-       
+        public DataSet LoadCity(int s)
+        {
+            //ARFFormFields emf = new ARFFormFields();
+            object obj;
+            //  String query1 = "select * from adm_tbl_personal_details where r_appid=@r_appid";
+
+            const string strcon = "Server=localhost\\SQLEXPRESS;Database=onlineadmission;Trusted_Connection=True;";
+            SqlConnection con = new SqlConnection(strcon);
+            SqlCommand cmd = new SqlCommand("ListCity", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            //DataTable dt = new DataTable { TableName = "MyTable" };
+            cmd.Parameters.AddWithValue("@state_id", s);
+            cmd.Connection = con;
+            DataSet ds = new DataSet();
+            try
+            {
+                con.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(ds);
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                cmd.Dispose();
+
+            }
+            return ds;
+        }
+
     }
+
+}
 

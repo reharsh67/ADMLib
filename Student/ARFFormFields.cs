@@ -35,9 +35,13 @@ namespace ADMLib.Student
         private string _email;
         private string _state;
         private string _city;
- 
+        private string _category;
 
-        
+        public string Category
+        {
+            get { return _category; }
+            set { _category = value; }
+        }
         public string Uid
         {
             get { return _uid; }

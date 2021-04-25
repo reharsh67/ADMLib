@@ -57,6 +57,7 @@
     <Compile Include="Student\AskQueryAfterLogin.cs" />
     <Compile Include="Student\CounsellingFields.cs" />
     <Compile Include="Student\CounsellingFormLogic.cs" />
+    <Compile Include="Student\DocumentFields.cs" />
     <Compile Include="Student\EnqueryFields.cs" />
     <Compile Include="Student\EnqueryFormLogin.cs" />
     <Compile Include="Student\GenratePassLogic.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Student\ResetPasswordLogic.cs" />
     <Compile Include="Student\StudLoginFields.cs" />
     <Compile Include="Student\StudLoginLogic.cs" />
+    <Compile Include="Student\UploadDocumentLogic.cs" />
     <Compile Include="Student\ViewQueryRespLogic.cs" />
   </ItemGroup>
   <ItemGroup>

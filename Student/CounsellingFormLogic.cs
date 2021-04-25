@@ -21,7 +21,7 @@ namespace ADMLib.Student
                 
                     SqlCommand cmd3 = new SqlCommand("BookCounselling", con);
                     cmd3.Connection = con;
-                    con.Open();
+             
                     cmd3.Parameters.AddWithValue("@r_year", ef.Year.Trim());
                     cmd3.Parameters.AddWithValue("@r_appid", ef.AppId);
                     cmd3.Parameters.AddWithValue("@r_slot", ef.Slot);
