@@ -18,6 +18,8 @@ namespace ADMLib.Student
         private int _ssctotobt;
         private int _dtotobt;
         private int _jeescore;
+        private int _sscout;
+        private int _dout;
         private float _doverallper;
         private float _sscoverallper;
         private float _hsscpcmper;
@@ -29,8 +31,17 @@ namespace ADMLib.Student
         private string _dboard;
         private string _hsscboard;
 
-
-
+       
+            public int SscOutOf
+        {
+            get { return _sscout; }
+            set { _sscout = value; }
+        }
+        public int Doutof
+        {
+            get { return _dout; }
+            set { _dout = value; }
+        }
         public int AppID
         {
             get { return _appid; }

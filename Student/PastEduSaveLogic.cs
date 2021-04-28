@@ -14,33 +14,46 @@ namespace ADMLib.Student
             String x = null;
             //String query1 = "inset into adm_tbl_past_edu_details (_appid,_hssctotobt,_hssctot,_hsscphymar,_hsscchemmar,_hsscmatmar,_hsscpcmtot,_cetscore,_ssctotobt,_dtotobt,_jeescore,_doverallper,_sscoverallper,_hsscpcmper,_hsscoverallper,_hsscgrade,_cetroll,_sscboard,_jeeroll,_dboard,_hsscboard) values (_appid,_hssctotobt,_hssctot,_hsscphymar,_hsscchemmar,_hsscmatmar,_hsscpcmtot,_cetscore,_ssctotobt,_dtotobt,_jeescore,_doverallper,_sscoverallper,_hsscpcmper,_hsscoverallper,_hsscgrade,_cetroll,_sscboard,_jeeroll,_dboard,_hsscboard) ";
             const string strcon = "Server=localhost\\SQLEXPRESS;Database=onlineadmission;Trusted_Connection=True;";
-            SqlConnection con = new SqlConnection(strcon);
+            SqlConnection  con = new SqlConnection(strcon); ;
+            SqlCommand cmd1 = new SqlCommand();
             string myMsg = "";
             try
             {
 
-                SqlCommand cmd1 = new SqlCommand("SavePastEduDetails", con);
-                cmd1.Parameters.AddWithValue("@r_appid", pf.AppID);
-                cmd1.Parameters.AddWithValue("@r_hsscboard", pf.HsscBoard);
-                cmd1.Parameters.AddWithValue("@r_hsscgrade", pf.HsscGrade);
-                cmd1.Parameters.AddWithValue("@r_hsscchemmar", pf.HsscChem);
-                cmd1.Parameters.AddWithValue("@r_hsscmatmar", pf.HsscMaths);
-                cmd1.Parameters.AddWithValue("@r_hsscphymar", pf.HsscPhy);
-                cmd1.Parameters.AddWithValue("@r_hsscoverallper", pf.HsscOverallPer);
-                cmd1.Parameters.AddWithValue("@r_hsscpcmper", pf.HsscPcmPer);
-                cmd1.Parameters.AddWithValue("@r_hsscpcmtot", pf.HsscPcmTot);
-                cmd1.Parameters.AddWithValue("@r_hssctot", pf.HsscTotMarks);
-                cmd1.Parameters.AddWithValue("@r_hssctotobt", pf.HsscTotMarksObt);
+                
+                
+                if(pf.HsscBoard != null)
+
+                { 
+                    cmd1 = new SqlCommand("SavePastEduDetails", con);
+                    cmd1.Parameters.AddWithValue("@r_appid", pf.AppID);
+                    cmd1.Parameters.AddWithValue("@r_hsscboard", pf.HsscBoard);
+                    cmd1.Parameters.AddWithValue("@r_hsscgrade", pf.HsscGrade);
+                    cmd1.Parameters.AddWithValue("@r_hsscchemmar", pf.HsscChem);
+                    cmd1.Parameters.AddWithValue("@r_hsscmatmar", pf.HsscMaths);
+                    cmd1.Parameters.AddWithValue("@r_hsscphymar", pf.HsscPhy);
+                    cmd1.Parameters.AddWithValue("@r_hsscoverallper", pf.HsscOverallPer);
+                    cmd1.Parameters.AddWithValue("@r_hsscpcmper", pf.HsscPcmPer);
+                    cmd1.Parameters.AddWithValue("@r_hsscpcmtot", pf.HsscPcmTot);
+                    cmd1.Parameters.AddWithValue("@r_hssctot", pf.HsscTotMarks);
+                    cmd1.Parameters.AddWithValue("@r_hssctotobt", pf.HsscTotMarksObt);
+                    cmd1.Parameters.AddWithValue("@r_jeeroll", pf.JeeRoll);
+                    cmd1.Parameters.AddWithValue("@r_jeescore", pf.JeeScore);
+                    cmd1.Parameters.AddWithValue("@r_cetroll", pf.CetRoll);
+                    cmd1.Parameters.AddWithValue("@r_cetscore", pf.CetScore);
+                }
+                if (pf.DipBoard != null)
+                {
+                    cmd1 = new SqlCommand("SavePastEduDetailsDip", con);
+                    cmd1.Parameters.AddWithValue("@r_appid", pf.AppID);
+                    cmd1.Parameters.AddWithValue("@r_dboard", pf.DipBoard);
+                    cmd1.Parameters.AddWithValue("@r_doverallper", pf.DipOverallPer);
+                    cmd1.Parameters.AddWithValue("@r_dtotobt", pf.DipTotObt);
+                }
                 cmd1.Parameters.AddWithValue("@r_sscboard", pf.SscBoard);
                 cmd1.Parameters.AddWithValue("@r_sscoverallper", pf.SscOverallPer);
                 cmd1.Parameters.AddWithValue("@r_ssctotobt", pf.SscTotObt);
-                cmd1.Parameters.AddWithValue("@r_dboard", pf.DipBoard);
-                cmd1.Parameters.AddWithValue("@r_doverallper", pf.DipOverallPer);
-                cmd1.Parameters.AddWithValue("@r_dtotobt", pf.DipTotObt);
-                cmd1.Parameters.AddWithValue("@r_jeeroll", pf.JeeRoll);
-                cmd1.Parameters.AddWithValue("@r_jeescore", pf.JeeScore);
-                cmd1.Parameters.AddWithValue("@r_cetroll", pf.CetRoll);
-                cmd1.Parameters.AddWithValue("@r_cetscore", pf.CetScore);
+
                 cmd1.Connection = con;
                 cmd1.CommandType = CommandType.StoredProcedure;
                 cmd1.Parameters.Add("@rv", SqlDbType.NVarChar, 250);
@@ -57,6 +70,22 @@ namespace ADMLib.Student
                 throw ex;
             }
             return x;
+        }
+        public PastEduFields calcuMarks(PastEduFields ef)
+        {
+            PastEduFields ac = new PastEduFields();
+            if(!String.IsNullOrEmpty(ef.HsscMaths.ToString()))
+                ac.HsscPcmTot = ef.HsscMaths + ef.HsscChem + ef.HsscPhy;
+                ac.HsscPcmPer = (float)((float.Parse(ac.HsscPcmTot.ToString()) / 300) * 100);
+                ac.HsscOverallPer = (float)((float.Parse(ef.HsscTotMarksObt.ToString()) / float.Parse(ef.HsscTotMarks.ToString())) * 100);
+
+            if(ef.DipTotObt.ToString() != null)
+                ac.DipOverallPer = (float)((float.Parse(ef.DipTotObt.ToString()) / float.Parse(ef.Doutof.ToString())) * 100);
+
+
+
+            ac.SscOverallPer = (float)((float.Parse(ef.SscOutOf.ToString()) / float.Parse(ef.SscTotObt.ToString())) * 100);
+            return ac;
         }
 
     }
