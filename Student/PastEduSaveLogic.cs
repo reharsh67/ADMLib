@@ -14,18 +14,12 @@ namespace ADMLib.Student
             String x = null;
             //String query1 = "inset into adm_tbl_past_edu_details (_appid,_hssctotobt,_hssctot,_hsscphymar,_hsscchemmar,_hsscmatmar,_hsscpcmtot,_cetscore,_ssctotobt,_dtotobt,_jeescore,_doverallper,_sscoverallper,_hsscpcmper,_hsscoverallper,_hsscgrade,_cetroll,_sscboard,_jeeroll,_dboard,_hsscboard) values (_appid,_hssctotobt,_hssctot,_hsscphymar,_hsscchemmar,_hsscmatmar,_hsscpcmtot,_cetscore,_ssctotobt,_dtotobt,_jeescore,_doverallper,_sscoverallper,_hsscpcmper,_hsscoverallper,_hsscgrade,_cetroll,_sscboard,_jeeroll,_dboard,_hsscboard) ";
             const string strcon = "Server=localhost\\SQLEXPRESS;Database=onlineadmission;Trusted_Connection=True;";
-            SqlConnection  con = new SqlConnection(strcon); ;
-            SqlCommand cmd1 = new SqlCommand();
             string myMsg = "";
             try
             {
-
-                
-                
-                if(pf.HsscBoard != null)
-
-                { 
-                    cmd1 = new SqlCommand("SavePastEduDetails", con);
+                   SqlConnection con = new SqlConnection(strcon);
+                    SqlCommand cmd1 = new SqlCommand("SavePastEduDetails", con);
+                    cmd1.CommandType = CommandType.StoredProcedure;
                     cmd1.Parameters.AddWithValue("@r_appid", pf.AppID);
                     cmd1.Parameters.AddWithValue("@r_hsscboard", pf.HsscBoard);
                     cmd1.Parameters.AddWithValue("@r_hsscgrade", pf.HsscGrade);
@@ -41,31 +35,57 @@ namespace ADMLib.Student
                     cmd1.Parameters.AddWithValue("@r_jeescore", pf.JeeScore);
                     cmd1.Parameters.AddWithValue("@r_cetroll", pf.CetRoll);
                     cmd1.Parameters.AddWithValue("@r_cetscore", pf.CetScore);
-                }
-                if (pf.DipBoard != null)
-                {
-                    cmd1 = new SqlCommand("SavePastEduDetailsDip", con);
+                    cmd1.Parameters.AddWithValue("@r_sscboard", pf.SscBoard);
+                    cmd1.Parameters.AddWithValue("@r_sscoverallper", pf.SscOverallPer);
+                    cmd1.Parameters.AddWithValue("@r_ssctotobt", pf.SscTotObt);
+                    cmd1.Connection = con;
+                    cmd1.CommandType = CommandType.StoredProcedure;
+                    cmd1.Parameters.Add("@rv", SqlDbType.NVarChar, 250);
+                    cmd1.Parameters["@rv"].Direction = ParameterDirection.Output;
+                    cmd1.Connection = con;
+                    con.Open();
+                    cmd1.ExecuteNonQuery();
+                    con.Close();
+                    x = cmd1.Parameters["@rv"].Value.ToString();
+               
+               
+            }catch(Exception ex)
+            {
+                throw ex;
+            }
+            return x;
+        }
+        public string Save_Past_Dip(PastEduFields pf)
+        {
+            String x = null;
+            //String query1 = "inset into adm_tbl_past_edu_details (_appid,_hssctotobt,_hssctot,_hsscphymar,_hsscchemmar,_hsscmatmar,_hsscpcmtot,_cetscore,_ssctotobt,_dtotobt,_jeescore,_doverallper,_sscoverallper,_hsscpcmper,_hsscoverallper,_hsscgrade,_cetroll,_sscboard,_jeeroll,_dboard,_hsscboard) values (_appid,_hssctotobt,_hssctot,_hsscphymar,_hsscchemmar,_hsscmatmar,_hsscpcmtot,_cetscore,_ssctotobt,_dtotobt,_jeescore,_doverallper,_sscoverallper,_hsscpcmper,_hsscoverallper,_hsscgrade,_cetroll,_sscboard,_jeeroll,_dboard,_hsscboard) ";
+            const string strcon = "Server=localhost\\SQLEXPRESS;Database=onlineadmission;Trusted_Connection=True;";
+            string myMsg = "";
+            try
+            {
+                    SqlConnection con = new SqlConnection(strcon);
+                    SqlCommand cmd1 = new SqlCommand("SavePastEduDetailsDip", con);
+                    cmd1.CommandType = CommandType.StoredProcedure;
                     cmd1.Parameters.AddWithValue("@r_appid", pf.AppID);
                     cmd1.Parameters.AddWithValue("@r_dboard", pf.DipBoard);
                     cmd1.Parameters.AddWithValue("@r_doverallper", pf.DipOverallPer);
                     cmd1.Parameters.AddWithValue("@r_dtotobt", pf.DipTotObt);
-                }
-                cmd1.Parameters.AddWithValue("@r_sscboard", pf.SscBoard);
-                cmd1.Parameters.AddWithValue("@r_sscoverallper", pf.SscOverallPer);
-                cmd1.Parameters.AddWithValue("@r_ssctotobt", pf.SscTotObt);
-
+                    cmd1.Parameters.AddWithValue("@r_sscboard", pf.SscBoard);
+                    cmd1.Parameters.AddWithValue("@r_sscoverallper", pf.SscOverallPer);
+                    cmd1.Parameters.AddWithValue("@r_ssctotobt", pf.SscTotObt);
+      
                 cmd1.Connection = con;
-                cmd1.CommandType = CommandType.StoredProcedure;
-                cmd1.Parameters.Add("@rv", SqlDbType.NVarChar, 250);
-                cmd1.Parameters["@rv"].Direction = ParameterDirection.Output;
-                cmd1.Connection = con;
-                con.Open();
-                cmd1.ExecuteNonQuery();
-                con.Close();
-                x = cmd1.Parameters["@rv"].Value.ToString();
-
-               
-            }catch(Exception ex)
+                    cmd1.CommandType = CommandType.StoredProcedure;
+                    cmd1.Parameters.Add("@rv", SqlDbType.NVarChar, 250);
+                    cmd1.Parameters["@rv"].Direction = ParameterDirection.Output;
+                    cmd1.Connection = con;
+                    con.Open();
+                    cmd1.ExecuteNonQuery();
+                    con.Close();
+                    x = cmd1.Parameters["@rv"].Value.ToString();
+            
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -79,7 +99,7 @@ namespace ADMLib.Student
                 ac.HsscPcmPer = (float)((float.Parse(ac.HsscPcmTot.ToString()) / 300) * 100);
                 ac.HsscOverallPer = (float)((float.Parse(ef.HsscTotMarksObt.ToString()) / float.Parse(ef.HsscTotMarks.ToString())) * 100);
 
-            if(ef.DipTotObt.ToString() != null)
+            if(!String.IsNullOrEmpty(ef.DipTotObt.ToString()))
                 ac.DipOverallPer = (float)((float.Parse(ef.DipTotObt.ToString()) / float.Parse(ef.Doutof.ToString())) * 100);
 
 

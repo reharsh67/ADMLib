@@ -8,7 +8,7 @@ namespace ADMLib.Clerk
     public class ClearkLoginFields
     {
 
-        private int _clerkid;
+        private string _clerkid;
         private string _pass;
         private string _email;
         private string _confirmPass;
@@ -34,7 +34,7 @@ namespace ADMLib.Clerk
             get { return _confirmPass; }
             set { _confirmPass = value; }
         }
-        public int ClerkID
+        public string ClerkID
         {
             get { return _clerkid; }
             set { _clerkid = value; }
